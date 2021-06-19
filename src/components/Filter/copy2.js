@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Filter({ Data, setData }) {
+function Filter({ Data }) {
   const classes = useStyles();
   const [size, setSize] = React.useState("");
   const [brand, setBrand] = React.useState("");
@@ -33,8 +33,14 @@ function Filter({ Data, setData }) {
   const [genderMale, setgenderMale] = React.useState(false);
   const [genderFemale, setgenderFemale] = React.useState(false);
 
-  const [allproducts] = React.useState(Data);
-  const [filtered, setFiltered] = React.useState(null);
+  const [products, setProducts] = React.useState(Data);
+
+  var priceLowtoHigh = Data.sort((a, b) => a.price - b.price);
+  var priceHightoLow = Data.sort((a, b) => b.price - a.price);
+  var male = Data.filter((item) => item.gender === "Male");
+  var female = Data.filter((item) => item.gender === "Female");
+
+  console.log(priceLowtoHigh, priceHightoLow);
 
   const Clear = () => {
     setSize("");
@@ -43,57 +49,79 @@ function Filter({ Data, setData }) {
     setpriceHigh(false);
     setgenderMale(false);
     setgenderFemale(false);
-    setData(allproducts);
+    setProducts(Data);
   };
 
   const PriceLowtoHigh = () => {
     setpriceLow(true);
     setpriceHigh(false);
-    const filtered = [...Data].sort((a, b) => (a.price > b.price ? 1 : -1));
-    setFiltered(filtered);
+    if (genderMale) {
+      var newList = male.sort((a, b) => (a.price > b.price ? 1 : -1));
+      setProducts(newList);
+    } else if (genderFemale) {
+      var newList2 = female.sort((a, b) => (a.price > b.price ? 1 : -1));
+      setProducts(newList2);
+    } else {
+      setProducts(priceLowtoHigh);
+    }
   };
 
   const PriceHightoLow = () => {
     setpriceLow(false);
     setpriceHigh(true);
-    const filtered = [...Data].sort((a, b) => (a.price > b.price ? -1 : 1));
-    setFiltered(filtered);
+    if (genderMale) {
+      var newList = male.sort((a, b) => (a.price > b.price ? -1 : 1));
+      setProducts(newList);
+    } else if (genderFemale) {
+      var newList2 = female.sort((a, b) => (a.price > b.price ? -1 : 1));
+      setProducts(newList2);
+    } else {
+      setProducts(priceHightoLow);
+    }
   };
 
   const Male = () => {
     setgenderMale(true);
     setgenderFemale(false);
-    const filtered = [...allproducts].filter((item) => item.gender === "Male");
-    setFiltered(filtered);
+    if (size) {
+      var newList = male.filter((item) => item.size === size);
+      setProducts(newList);
+    } else {
+      setProducts(male);
+    }
   };
   const Female = () => {
     setgenderMale(false);
     setgenderFemale(true);
-    const filtered = [...allproducts].filter(
-      (item) => item.gender === "Female"
-    );
-    setFiltered(filtered);
+    if (size) {
+      var newList = female.filter((item) => item.size === size);
+      setProducts(newList);
+    } else {
+      setProducts(female);
+    }
   };
 
   const Size = (event) => {
     var value = event.target.value;
     setSize(value);
-    const filtered = [...Data].filter((product) => product.size === value);
-    setFiltered(filtered);
+    if (genderMale) {
+      var newList = male.filter((item) => item.size === value);
+      setProducts(newList);
+    } else if (genderFemale) {
+      var newList2 = female.filter((item) => item.size === value);
+      setProducts(newList2);
+    } else {
+      const list = Data.filter((item) => item.size === value);
+      setProducts(list);
+    }
   };
 
   const Brand = (event) => {
     var value = event.target.value;
     setBrand(value);
-    const filtered = [...Data].filter((product) => product.brand === value);
-    setFiltered(filtered);
+    const list = Data.filter((item) => item.brand === value);
+    setProducts(list);
   };
-
-  React.useEffect(() => {
-    if (filtered) {
-      setData(filtered);
-    }
-  }, [filtered, setData]);
 
   return (
     <>
@@ -158,7 +186,7 @@ function Filter({ Data, setData }) {
           </Select>
         </FormControl>
       </Toolbar>
-      <MainPage data={Data} />
+      <MainPage data={products} />
     </>
   );
 }

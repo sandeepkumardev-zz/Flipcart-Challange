@@ -1,7 +1,7 @@
 import "./App.css";
 import React from "react";
 import NavBar from "./components/NavBar";
-import Filter from "./components/Filter/copy2";
+import Filter from "./components/Filter";
 
 function App() {
   const [Data, setData] = React.useState(null);
@@ -17,8 +17,6 @@ function App() {
   React.useEffect(() => {
     getResumeData();
   }, []);
-
-  // console.log(Data);
 
   return (
     <div>

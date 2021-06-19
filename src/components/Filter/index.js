@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Filter({ Data }) {
+function Filter({ Data, setData }) {
   const classes = useStyles();
   const [size, setSize] = React.useState("");
   const [brand, setBrand] = React.useState("");
@@ -33,14 +33,8 @@ function Filter({ Data }) {
   const [genderMale, setgenderMale] = React.useState(false);
   const [genderFemale, setgenderFemale] = React.useState(false);
 
-  const [products, setProducts] = React.useState(Data);
-
-  var priceLowtoHigh = Data.sort((a, b) => a.price - b.price);
-  var priceHightoLow = Data.sort((a, b) => b.price - a.price);
-  var male = Data.filter((item) => item.gender === "Male");
-  var female = Data.filter((item) => item.gender === "Female");
-
-  console.log(priceLowtoHigh, priceHightoLow);
+  const [allproducts] = React.useState(Data);
+  const [filtered, setFiltered] = React.useState(null);
 
   const Clear = () => {
     setSize("");
@@ -49,79 +43,59 @@ function Filter({ Data }) {
     setpriceHigh(false);
     setgenderMale(false);
     setgenderFemale(false);
-    setProducts(Data);
+    setData(allproducts);
   };
 
   const PriceLowtoHigh = () => {
     setpriceLow(true);
     setpriceHigh(false);
-    if (genderMale) {
-      var newList = male.sort((a, b) => (a.price > b.price ? 1 : -1));
-      setProducts(newList);
-    } else if (genderFemale) {
-      var newList2 = female.sort((a, b) => (a.price > b.price ? 1 : -1));
-      setProducts(newList2);
-    } else {
-      setProducts(priceLowtoHigh);
-    }
+    const filtered = [...Data].sort((a, b) => (a.price > b.price ? 1 : -1));
+    setFiltered(filtered);
   };
 
   const PriceHightoLow = () => {
     setpriceLow(false);
     setpriceHigh(true);
-    if (genderMale) {
-      var newList = male.sort((a, b) => (a.price > b.price ? -1 : 1));
-      setProducts(newList);
-    } else if (genderFemale) {
-      var newList2 = female.sort((a, b) => (a.price > b.price ? -1 : 1));
-      setProducts(newList2);
-    } else {
-      setProducts(priceHightoLow);
-    }
+    const filtered = [...Data].sort((a, b) => (a.price > b.price ? -1 : 1));
+    setFiltered(filtered);
   };
 
   const Male = () => {
     setgenderMale(true);
     setgenderFemale(false);
-    if (size) {
-      var newList = male.filter((item) => item.size === size);
-      setProducts(newList);
-    } else {
-      setProducts(male);
-    }
+    const filtered = [...allproducts].filter((item) => item.gender === "Male");
+    setFiltered(filtered);
   };
   const Female = () => {
     setgenderMale(false);
     setgenderFemale(true);
-    if (size) {
-      var newList = female.filter((item) => item.size === size);
-      setProducts(newList);
-    } else {
-      setProducts(female);
-    }
+    const filtered = [...allproducts].filter(
+      (item) => item.gender === "Female"
+    );
+    setFiltered(filtered);
   };
 
   const Size = (event) => {
     var value = event.target.value;
     setSize(value);
-    if (genderMale) {
-      var newList = male.filter((item) => item.size === value);
-      setProducts(newList);
-    } else if (genderFemale) {
-      var newList2 = female.filter((item) => item.size === value);
-      setProducts(newList2);
-    } else {
-      const list = Data.filter((item) => item.size === value);
-      setProducts(list);
-    }
+    const filtered = [...Data].filter((product) => product.size === value);
+    setFiltered(filtered);
   };
 
   const Brand = (event) => {
     var value = event.target.value;
     setBrand(value);
-    const list = Data.filter((item) => item.brand === value);
-    setProducts(list);
+    const filtered = [...allproducts].filter(
+      (product) => product.brand === value
+    );
+    setFiltered(filtered);
   };
+
+  React.useEffect(() => {
+    if (filtered) {
+      setData(filtered);
+    }
+  }, [filtered, setData]);
 
   return (
     <>
@@ -186,7 +160,7 @@ function Filter({ Data }) {
           </Select>
         </FormControl>
       </Toolbar>
-      <MainPage data={products} />
+      <MainPage data={Data} />
     </>
   );
 }
