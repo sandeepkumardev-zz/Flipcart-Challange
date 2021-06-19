@@ -1,23 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React from "react";
+import NavBar from "./components/NavBar";
+import Filter from "./components/Filter";
 
 function App() {
+  const [Data, setData] = React.useState(null);
+
+  const getResumeData = async () => {
+    await fetch("/MOCK_DATA.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      });
+  };
+
+  React.useEffect(() => {
+    getResumeData();
+  }, []);
+
+  // console.log(Data);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <NavBar />
+      {Data && <Filter Data={Data} />}
     </div>
   );
 }
