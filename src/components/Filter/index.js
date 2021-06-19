@@ -35,8 +35,8 @@ function Filter({ Data }) {
 
   const [products, setProducts] = React.useState(Data);
 
-  var priceLowtoHigh = Data.sort((a, b) => (a.price > b.price ? 1 : -1));
-  var priceHightoLow = Data.sort((a, b) => (a.price < b.price ? 1 : -1));
+  var priceLowtoHigh = Data.sort((a, b) => a.price - b.price);
+  var priceHightoLow = Data.sort((a, b) => b.price - a.price);
   var male = Data.filter((item) => item.gender === "Male");
   var female = Data.filter((item) => item.gender === "Female");
 
@@ -83,12 +83,23 @@ function Filter({ Data }) {
   const Male = () => {
     setgenderMale(true);
     setgenderFemale(false);
-    setProducts(male);
+
+    if (size) {
+      var newList = male.filter((item) => item.size === size);
+      setProducts(newList);
+    } else {
+      setProducts(male);
+    }
   };
   const Female = () => {
     setgenderMale(false);
     setgenderFemale(true);
-    setProducts(female);
+    if (size) {
+      var newList = female.filter((item) => item.size === size);
+      setProducts(newList);
+    } else {
+      setProducts(female);
+    }
   };
 
   const Size = (event) => {
