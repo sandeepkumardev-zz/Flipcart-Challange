@@ -11,8 +11,8 @@
 # production
 /build
 .env
-copy.js
 copy2.js
+copy.js
 
 
 # misc
