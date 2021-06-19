@@ -1,7 +1,7 @@
 import "./App.css";
 import React from "react";
 import NavBar from "./components/NavBar";
-import Filter from "./components/Filter";
+import Filter from "./components/Filter/copy2";
 
 function App() {
   const [Data, setData] = React.useState(null);
@@ -23,7 +23,7 @@ function App() {
   return (
     <div>
       <NavBar />
-      {Data && <Filter Data={Data} />}
+      {Data && <Filter Data={Data} setData={setData} />}
     </div>
   );
 }

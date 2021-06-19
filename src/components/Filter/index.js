@@ -83,7 +83,6 @@ function Filter({ Data }) {
   const Male = () => {
     setgenderMale(true);
     setgenderFemale(false);
-
     if (size) {
       var newList = male.filter((item) => item.size === size);
       setProducts(newList);
