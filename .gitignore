@@ -12,7 +12,7 @@
 /build
 .env
 copy.js
-copy2.js
+
 
 # misc
 .DS_Store
